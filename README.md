@@ -12,7 +12,8 @@ Maybe this feature will be added in the future. Patches are welcome.
 ```bash
 #!/bin/sh
 git clone git://github.com/yorn/vmware-check-tools.git
-rsync -a --exclude=\*.md --exclude=.git vmware-check-tools/ /etc/
+cp vmware-check-tools/init.d/* /etc/init.d/
+cp vmware-check-tools/sysconfig/* /etc/sysconfig/
 chmod +x /etc/init.d/vmware-check-tools
 chkconfig vmware-check-tools on
 rm -rf vmware-check-tools
