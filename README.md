@@ -4,7 +4,10 @@ This system service will compile the VMWare Guest Tools once for every new kerne
 
 # Installation
 ```bash
-rsync -a --exclude=\*.md --exclude=.git . /etc/
+#!/bin/sh
+git clone git://github.com/yorn/vmware-check-tools.git
+rsync -a --exclude=\*.md --exclude=.git vmware-check-tools/ /etc/
 chmod +x /etc/init.d/vmware-check-tools
 chkconfig vmware-check-tools on
+rm -rf vmware-check-tools
 ```
