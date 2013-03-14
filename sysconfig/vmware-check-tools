@@ -1,0 +1,10 @@
+#Indicate where the VMWare Guest Tools binary can be found
+VMTOOLS=/usr/bin/vmware-config-tools.pl
+
+#Indicate where kernel modules are stored
+KERNELMODULES=/lib/modules
+
+#The file to create inside the modules directory
+#to indicate the VMWare Guest Tools have been compiled
+#This file will contain the version number of the Guest Tools
+CHECKFILE=misc/vmware_tools.ver

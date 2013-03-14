@@ -1,0 +1,107 @@
+#!/bin/bash
+#
+# vmware-check-tools The VMWare Tools service reinstalls the VMWare tools
+# at the first boot after a kernel upgrade.
+# Intended for use at RHEL based systems, not tested on SuSE.
+#
+# chkconfig: - 95 5
+# description: Runs '/usr/bin/vmware-config-tools.pl' at boot
+#              when a kernel upgrade is performed
+#
+
+### BEGIN INIT INFO
+# Provides: vmware-check-tools
+# Required-Start: $local_fs $network $remote_fs
+# Required-Stop:
+# Should-Start:
+# Should-Stop:
+# Default-Start:
+# Default-Stop:
+# Short-Description: re-compile VMWare Tools kernel modules if needed
+# Description: Runs '/usr/bin/vmware-config-tools.pl' at boot
+#              when a kernel upgrade is performed
+### END INIT INFO
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+# Copyright 2013 Yorn de Jong
+# Written by Yorn de Jong <byorn@users.sf.net>
+# Inspired by http://vmadmin.nt.com.au/?p=52
+
+# Source function library.
+. /etc/init.d/functions
+
+if [ ! -f /etc/sysconfig/vmware-check-tools ]; then
+	exit 0
+fi
+
+. /etc/sysconfig/vmware-check-tools
+
+function init() {
+	echo -n $"Checking VMWare tools"
+	echo -n ': '
+
+	if [ ! -x "$VMTOOLS" ]; then
+		failure
+		echo
+		exit 1
+	fi
+
+	VMToolsCheckFile="$KERNELMODULES/`uname -r`/$CHECKFILE"
+	VMToolsVersion="`"$VMTOOLS" --help 2>&1 | awk '$0 ~ /^VMware Tools [0-9]/ { print $3,$4 }'`"
+
+	[ '' == "$VMToolsVersion" ] && failure || \
+		echo -n " $VMToolsVersion" && [ -e "$VMToolsCheckFile" ] && success || warning
+	echo
+}
+
+case "$1" in
+	start)
+		init
+
+		if [[ ! -e "$VMToolsCheckFile" || "`grep -c "$VMToolsVersion" $VMToolsCheckFile`" -eq 0 ]]; then
+			echo -n $"Recompiling VMWare tools"
+			echo -n ': '
+			"$VMTOOLS" --default 2>&1 > /dev/null && \
+				echo "$VMToolsVersion" > "$VMToolsCheckFile" && \
+				success || failure
+			echo
+			echo -n $"Reloading VMWare kernel module"
+			echo -n ': '
+			depmod -a 2>&1 > /dev/null
+			modprobe vmxnet 2>&1 > /dev/null && success || warning
+			echo
+		fi
+		exit 0
+		;;
+	stop)
+		exit 0
+		;;
+	restart)
+		exit 0
+		;;
+	reload)
+		exit 0
+		;;
+	status)
+		init
+		exit 0
+		;;
+	*)
+		echo $"Usage: $0 {start|status}" > /dev/stderr
+		exit 2
+esac
+
+exit 0
