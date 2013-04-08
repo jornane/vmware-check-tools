@@ -1,4 +1,4 @@
-# VMWare Tools recompiling system service
+# VMWare Tools recompile system service
 When running a Linux virtual machine on a VMWare Hypervisor you are adviced to install the VMWare Guest Tools on the virtual machine. But after every kernel upgrade you’ll have to recompile them. This can become a tedious task when you have a lot of virtual machines.
 
 ## What will it do
