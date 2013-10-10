@@ -3,6 +3,7 @@ Sorry to see you go. There are two things you need to remove.
 
 ## Remove checking tools
 ```bash
+chkconfig --del vmware-check-tools
 rm /etc/init.d/vmware-check-tools
 rm /etc/sysconfig/vmware-check-tools
 rm /lib/modules/*/misc/vmware_tools.ver
