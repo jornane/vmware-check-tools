@@ -13,11 +13,18 @@ Patches are welcome.
 
 # Installation
 ## VMware Tools
-In the vSphere client, choose **Guest** -> *Install/Upgrade VMware Tools*.
+In the vSphere client, choose **Guest** -> **Install/Upgrade VMware Tools**.
 
 Execute the following script:
 ```bash
-mkdir -p /mnt/sr0 && mount /dev/sr0 /mnt/sr0 && cd && tar -xzvf /mnt/sr0/VMwareTools-*.tar.gz && umount /mnt/sr0 && rmdir /mnt/sr0 && yum install -y kernel-headers kernel-devel perl gcc make eject && vmware-tools-distrib/vmware-install.pl --default
+mkdir -p /mnt/sr0 \
+&& mount /dev/sr0 /mnt/sr0 \
+&& cd \
+&& tar -xzvf /mnt/sr0/VMwareTools-*.tar.gz \
+&& umount /mnt/sr0 \
+&& rmdir /mnt/sr0 \
+&& yum install -y kernel-headers kernel-devel perl gcc make eject \
+&& vmware-tools-distrib/vmware-install.pl --default
 ```
 
 ## Recompile system service
