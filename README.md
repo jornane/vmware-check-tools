@@ -1,4 +1,7 @@
 # VMware Tools recompile system service
+
+> You don't need this anymore!  Most OSes have `open-vm-tools` in their repo, which works a lot better.
+
 When running a Linux virtual machine on a VMware Hypervisor you are adviced to install the VMware Guest Tools on the virtual machine.
 But after every kernel upgrade you’ll have to recompile them.
 This can become a tedious task when you have a lot of virtual machines.
